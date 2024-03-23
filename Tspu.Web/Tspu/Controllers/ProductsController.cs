@@ -7,7 +7,7 @@ namespace Tspu.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private static readonly List<Product> products= new List<Product>();
         [HttpGet]
@@ -43,13 +43,13 @@ namespace Tspu.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public IActionResult Put([FromBody] Product product)
-        {
+        //[HttpPut]
+        //public IActionResult Put([FromBody] Product product)
+        //{
             
-            foreach (var product in products) {
-            if (product.Id == id) return Ok(product);
-            }
-        }
+        //    foreach (var product in products) {
+        //    if (product.Id == id) return Ok(product);
+        //    }
+        //}
     }
 }
