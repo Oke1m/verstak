@@ -43,13 +43,26 @@ namespace Tspu.Controllers
             return Ok();
         }
 
-        //[HttpPut]
-        //public IActionResult Put([FromBody] Product product)
-        //{
-            
-        //    foreach (var product in products) {
-        //    if (product.Id == id) return Ok(product);
-        //    }
-        //}
+        [HttpPut]
+        public IActionResult Put([FromBody] Product productRequest)
+        {
+            var pr = productRequest.Id;
+            if (pr == Guid.Empty)
+            {
+                productRequest.Id = Guid.NewGuid();
+            }
+            else
+            {
+                
+            }
+
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+
+        }
+
     }
 }
