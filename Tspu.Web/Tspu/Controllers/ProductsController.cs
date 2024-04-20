@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Tspu.Contract;
-using Tspu.Новая_папка;
+using Tspu.Models;
+using Tspu.Service;
 
 namespace Tspu.Controllers
 {
@@ -9,21 +9,29 @@ namespace Tspu.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private static readonly List<Product> products= new List<Product>();
+        private readonly IProductsService productsService;
+
+        public ProductsController(IProductsService productsService)
+        {
+            this.productsService = productsService;
+        }
         [HttpGet]
         public IActionResult Get()
         {
+            var products = productsService.Get();
             return Ok(products);
         }
 
         [HttpGet("(id)")]
         public IActionResult Get([FromRoute] Guid id)
         {
-            foreach (var product in products) {
-            if (product.Id == id) return Ok(product);
+            var product = productsService.Get(id);
+            if (product == null)
+            {
+                return BadRequest($"Item {id} not found");
             }
 
-            return BadRequest($"Item {id} not found");
+            return Ok(product);
         }
 
         [HttpPost]
@@ -31,7 +39,6 @@ namespace Tspu.Controllers
         {
             var newProduct = new Product()
             {
-                Id = Guid.NewGuid(),
                 Title = requestProduct.Title,
                 Description = requestProduct.Description,
                 Price = requestProduct.Price,
@@ -39,29 +46,32 @@ namespace Tspu.Controllers
 
             };
 
-            products.Add(newProduct);
+            productsService.Add(newProduct);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Put([FromBody] Product productRequest)
         {
-            var pr = productRequest.Id;
-            if (pr == Guid.Empty)
+            var pr = productsService.Update(productRequest);
+            if (!pr)
             {
-                productRequest.Id = Guid.NewGuid();
+                return BadRequest("product not found");
             }
-            else
-            {
-                
-            }
+            return NoContent();
 
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] Guid id)
         {
+            var result = productsService.Delete(id);
+            if(!result)
+            {
+                return BadRequest("product not found");
 
+            }
+            return NoContent();
         }
 
     }

@@ -1,4 +1,4 @@
-﻿namespace Tspu.Новая_папка
+﻿namespace Tspu.Models
 {
     public class Product
     {
